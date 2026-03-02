@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://test-chat.atomic-dns.com:3001',
+        target: 'http://test-chat.atomic-dns.com:36000',
         changeOrigin: true,
       },
     },

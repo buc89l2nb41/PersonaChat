@@ -12,7 +12,7 @@ interface ChatProps {
   systemMessage: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://test-chat.atomic-dns.com:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://test-chat.atomic-dns.com:36000';
 
 export default function Chat({ systemMessage }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
