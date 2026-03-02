@@ -12,7 +12,11 @@ interface ChatProps {
   systemMessage: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://test-chat.atomic-dns.com:36000';
+// Vercel(HTTPS) 환경에서는 반드시 HTTPS API 엔드포인트를 사용해야 하므로,
+// 프로덕션에서는 환경변수로만 URL을 받고, 개발 환경에서만 HTTP 기본값을 사용합니다.
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://test-chat.atomic-dns.com:36000' : '');
 
 export default function Chat({ systemMessage }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
