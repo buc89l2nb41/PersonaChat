@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import pb from './lib/pocketbase';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -8,6 +8,7 @@ import PersonaDetail from './components/PersonaDetail';
 import './App.css';
 
 function App() {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [showAuth, setShowAuth] = useState(false);
@@ -28,6 +29,8 @@ function App() {
 
   const handleLogout = () => {
     pb.authStore.clear();
+    // 로그아웃 시 대화 화면을 벗어나 메모리에 남은 대화 내용이 노출되지 않도록 홈으로 이동
+    navigate('/', { replace: true });
   };
 
   return (
