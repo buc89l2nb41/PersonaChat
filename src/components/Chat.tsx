@@ -126,7 +126,7 @@ export default function Chat({ systemMessage, personaId }: ChatProps) {
         filter: `conversation="${cId}"`,
         expand: 'conversation',
       });
-      const items = (list.items as { id: string; role: string; content: string }[]).map(mapPbMessage);
+      const items = (list.items as unknown as { id: string; role: string; content: string }[]).map(mapPbMessage);
       const chronological = [...items].reverse();
       return { chronological, totalPages: list.totalPages };
     },
