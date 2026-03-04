@@ -16,11 +16,11 @@ interface ChatProps {
   personaId?: string;
 }
 
-// 개발 시에는 빈 문자열을 써서 상대 경로(/health, /api/...)로 요청 → Vite 프록시가 백엔드로 전달 (CORS·preflight 문제 방지).
-// 프로덕션에서는 VITE_API_URL을 반드시 설정해 두세요.
+// 로컬(DEV): VITE_API_URL 없으면 테스트 서버 주소 사용. 있으면 그대로 사용 (예: localhost:36000).
+// 프로덕션: VITE_API_URL 없으면 '' → 상대 경로(/health, /api) 사용, Vercel rewrites로 백엔드 프록시.
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL ??
-  (import.meta.env.DEV ? '' : '');
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://test-chat.atomic-dns.com:36000' : '');
 
 const FIRST_GREETING_PROMPT =
   '대화를 시작해줘. 너의 캐릭터에 맞는 첫 인사나 첫 멘트를 한 마디 해줘.';
@@ -30,9 +30,6 @@ const HEALTH_CHECK_TIMEOUT_MS = 8000;
 
 /** 백엔드 연결 확인. 실패 시 에러 메시지 throw */
 async function checkApiConnection(): Promise<void> {
-  if (!import.meta.env.DEV && !API_BASE_URL?.trim()) {
-    throw new Error('채팅 서버 주소가 설정되지 않았습니다. VITE_API_URL을 확인해 주세요.');
-  }
   const base = API_BASE_URL?.trim() || '';
   const healthUrl = base ? `${base}/health` : '/health';
   const controller = new AbortController();
