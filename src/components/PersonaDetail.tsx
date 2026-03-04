@@ -119,7 +119,7 @@ export default function PersonaDetail() {
             </div>
           </div>
 
-          <Chat systemMessage={persona.systemMessage} />
+          <Chat systemMessage={persona.systemMessage} personaId={persona.id} />
         </>
       )}
     </div>

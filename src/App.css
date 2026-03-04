@@ -77,6 +77,33 @@
   background: radial-gradient(circle at top left, #1f2933, #050816);
 }
 
+.chat-top-sentinel {
+  min-height: 1px;
+  width: 100%;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.chat-loading-older {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.chat-loading-older-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: persona-list-spin 0.7s linear infinite;
+}
+
 .chat-empty {
   margin: auto;
   text-align: center;
@@ -354,8 +381,9 @@
 
 .app {
   min-height: 100vh;
+  width: 100%;
   max-width: 960px;
-  margin: 0 auto;
+  margin: 0;
   padding: 1.5rem 1.5rem 2rem;
   box-sizing: border-box;
   display: flex;
@@ -425,21 +453,136 @@
   justify-content: center;
   z-index: 30;
   backdrop-filter: blur(6px);
+}
+
+.auth-modal-card {
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 1rem;
+  padding: 1.75rem 2rem;
+  max-width: 400px;
+  width: calc(100% - 2rem);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+}
+
+.auth-modal-card .login-container {
+  padding: 0;
+  margin: 0;
+}
+
+.auth-modal-card .login-container h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.auth-modal-card .form-group {
+  margin-bottom: 1rem;
+}
+
+.auth-modal-card .form-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.auth-modal-card label {
+  display: block;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+}
+
+.auth-modal-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.auth-modal-card input::placeholder {
+  color: #64748b;
+}
+
+.auth-modal-card input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.auth-modal-card button[type="submit"] {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.auth-modal-card button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.auth-modal-card button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-modal-card .auth-switch {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.auth-modal-card .auth-switch p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.auth-modal-card .auth-switch button {
+  background: none;
+  border: none;
+  color: #818cf8;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.auth-modal-card .auth-switch button:hover {
+  color: #a5b4fc;
+}
+
+.auth-modal-card .close-auth {
+  margin-top: 0.5rem;
+  align-self: center;
 }
 
 .close-auth {
-  margin-top: 0.25rem;
   background: transparent;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.7);
+  color: #e2e8f0;
   font-size: 0.8rem;
-  padding: 0.3rem 0.9rem;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
 }
 
 .close-auth:hover {
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(148, 163, 184, 0.6);
 }
 
 /* ========== Persona 목록 / 카드 ========== */
@@ -497,24 +640,26 @@
 
 .personas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
 }
 
 .persona-card {
-  padding: 0.85rem 0.95rem;
-  border-radius: 0.9rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
   border: 1px solid rgba(148, 163, 184, 0.45);
   background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
   cursor: pointer;
+  min-height: 120px;
   transition:
-    transform 80ms ease-out,
-    box-shadow 80ms ease-out,
+    transform 120ms ease-out,
+    box-shadow 120ms ease-out,
     border-color 120ms ease-out,
     background-color 120ms ease-out;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .persona-card:hover {
@@ -526,6 +671,10 @@
   background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.9), #020617);
 }
 
+.persona-card:active {
+  transform: translateY(0);
+}
+
 .persona-card:focus-visible {
   outline: 2px solid #6366f1;
   outline-offset: 2px;
@@ -533,13 +682,27 @@
 
 .persona-card h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #f1f5f9;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .persona-description {
   margin: 0;
   font-size: 0.85rem;
-  color: #e5e7eb;
+  color: #94a3b8;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
 }
 
 .persona-meta {
@@ -548,6 +711,61 @@
   align-items: center;
   font-size: 0.75rem;
   color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* 무한 스크롤: 스크롤 끝 감지용 감시 요소 */
+.persona-list-sentinel {
+  min-height: 1px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.persona-list-loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.persona-list-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: persona-list-spin 0.7s linear infinite;
+}
+
+@keyframes persona-list-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 3rem 1rem;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.loading::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: persona-list-spin 0.7s linear infinite;
+  flex-shrink: 0;
 }
 
 .empty-list {
@@ -570,15 +788,19 @@
 .back-button {
   align-self: flex-start;
   border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.8rem;
-  background: transparent;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  color: #e5e7eb;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #f1f5f9;
+  cursor: pointer;
 }
 
 .back-button:hover {
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(148, 163, 184, 0.7);
+  color: #f8fafc;
 }
 
 .persona-header {
@@ -647,7 +869,7 @@
 
 @media (max-width: 640px) {
   .app {
-    padding: 1rem 0.9rem 1.5rem;
+    padding: 1rem 0.75rem 1.5rem;
   }
 
   .app-header {
@@ -657,5 +879,32 @@
 
   .personas-grid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .persona-card {
+    padding: 1rem 1rem;
+    min-height: 100px;
+  }
+
+  .persona-card h3 {
+    font-size: 1rem;
+  }
+
+  .persona-description {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .persona-list-loading-more {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* 뷰포트가 좁을 때 카드 2열 유지 (작은 태블릿) */
+@media (min-width: 481px) and (max-width: 640px) {
+  .personas-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

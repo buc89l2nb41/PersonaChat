@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "http://test-chat.atomic-dns.com:36000/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "http://test-chat.atomic-dns.com:36000/health"
     }
   ]
 }

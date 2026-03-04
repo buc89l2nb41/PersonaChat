@@ -54,29 +54,31 @@ function App() {
       <main className="app-main">
         {showAuth && !isAuthenticated && (
           <div className="auth-overlay">
-            {showSignup ? (
-              <Signup 
-                onSuccess={() => {
-                  setIsAuthenticated(true);
-                  setShowAuth(false);
-                }} 
-                onSwitchToLogin={() => setShowSignup(false)}
-              />
-            ) : (
-              <Login 
-                onSuccess={() => {
-                  setIsAuthenticated(true);
-                  setShowAuth(false);
-                }} 
-                onSwitchToSignup={() => setShowSignup(true)}
-              />
-            )}
-            <button 
-              className="close-auth" 
-              onClick={() => setShowAuth(false)}
-            >
-              닫기
-            </button>
+            <div className="auth-modal-card">
+              {showSignup ? (
+                <Signup 
+                  onSuccess={() => {
+                    setIsAuthenticated(true);
+                    setShowAuth(false);
+                  }} 
+                  onSwitchToLogin={() => setShowSignup(false)}
+                />
+              ) : (
+                <Login 
+                  onSuccess={() => {
+                    setIsAuthenticated(true);
+                    setShowAuth(false);
+                  }} 
+                  onSwitchToSignup={() => setShowSignup(true)}
+                />
+              )}
+              <button 
+                className="close-auth" 
+                onClick={() => setShowAuth(false)}
+              >
+                닫기
+              </button>
+            </div>
           </div>
         )}
         

@@ -32,4 +32,10 @@ export const COLLECTIONS = {
   USERS: getCollectionName('users'),
   // 커스텀 personas 컬렉션
   PERSONAS: getCollectionName('personas'),
+  // 로그인 사용자별 페르소나 대화: 1개 레코드 = 1개 대화(채널), 메시지는 MESSAGES 컬렉션에 별도 저장
+  // 필드: user(relation→users), persona(relation→personas)
+  CONVERSATIONS: getCollectionName('conversations'),
+  // 대화별 메시지 (conversation relation, role, content) — 최신순 페이지네이션용
+  // 필드: conversation(relation→conversations), role(text), content(text)
+  MESSAGES: getCollectionName('messages'),
 } as const;
