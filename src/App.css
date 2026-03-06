@@ -680,6 +680,21 @@
   outline-offset: 2px;
 }
 
+.persona-card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(148, 163, 184, 0.4);
+}
+
+.persona-card-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .persona-card h3 {
   margin: 0;
   font-size: 1.05rem;
@@ -777,6 +792,125 @@
   color: #9ca3af;
 }
 
+/* ========== Persona 폼 (만들기/수정) ========== */
+
+.persona-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.persona-form label {
+  display: block;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+}
+
+.persona-form input[type="text"],
+.persona-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.persona-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.persona-form-avatar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.persona-form-avatar-preview {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(148, 163, 184, 0.5);
+}
+
+.persona-form-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.persona-form-avatar-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(15, 23, 42, 0.95);
+  color: #f87171;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.persona-form-avatar-remove:hover {
+  background: rgba(248, 113, 113, 0.3);
+  color: #fca5a5;
+}
+
+.persona-form-avatar-input {
+  display: none;
+}
+
+.persona-form-avatar-label {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.6);
+  color: #94a3b8;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.persona-form-avatar-label:hover {
+  border-color: #6366f1;
+  color: #a5b4fc;
+}
+
+.persona-form .form-actions {
+  margin-top: 1rem;
+}
+
+.persona-form .submit-button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.persona-form .submit-button:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.persona-form .submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* ========== Persona 상세 / 수정 ========== */
 
 .persona-detail {
@@ -811,6 +945,54 @@
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+}
+
+.persona-header-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(148, 163, 184, 0.5);
+}
+
+.persona-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 아바타가 있을 때 상단을 아바타+제목 한 줄로 */
+.persona-header:has(.persona-header-avatar) .persona-header-top {
+  align-items: flex-start;
+}
+
+.persona-header:has(.persona-header-avatar) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+}
+
+.persona-header:has(.persona-header-avatar) .persona-header-avatar {
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.persona-header:has(.persona-header-avatar) .persona-header-top {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.persona-header:has(.persona-header-avatar) .persona-description {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.persona-header:has(.persona-header-avatar) .persona-meta {
+  grid-column: 1 / -1;
+  grid-row: 3;
 }
 
 .persona-header-top {

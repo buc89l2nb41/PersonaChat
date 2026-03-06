@@ -26,6 +26,15 @@ pb.autoCancellation(false);
 
 export default pb;
 
+/** Persona 아바타 이미지 URL 반환 (avatar 필드가 있을 때만) */
+export function getPersonaAvatarUrl(persona: { id: string; avatar?: string }): string | null {
+  if (!persona.avatar) return null;
+  return pb.files.getUrl(
+    { id: persona.id, collectionId: COLLECTIONS.PERSONAS },
+    persona.avatar
+  );
+}
+
 // 컬렉션 이름 상수 (타입 안정성을 위해)
 export const COLLECTIONS = {
   // 커스텀 users 컬렉션 (PocketBaseBoard와 분리)

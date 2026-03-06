@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import pb, { COLLECTIONS } from '../lib/pocketbase';
+import { useState, useRef, useEffect } from 'react';
+import pb, { COLLECTIONS, getPersonaAvatarUrl } from '../lib/pocketbase';
 
 interface PersonaFormProps {
   onSuccess: () => void;
@@ -7,6 +7,8 @@ interface PersonaFormProps {
   initialName?: string;
   initialDescription?: string;
   initialSystemMessage?: string;
+  /** 수정 시 기존 아바타 파일명 (이미지 미리보기/교체용) */
+  initialAvatar?: string;
 }
 
 export default function PersonaForm({ 
@@ -14,12 +16,25 @@ export default function PersonaForm({
   personaId, 
   initialName = '', 
   initialDescription = '', 
-  initialSystemMessage = '' 
+  initialSystemMessage = '',
+  initialAvatar = '',
 }: PersonaFormProps) {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [systemMessage, setSystemMessage] = useState(initialSystemMessage);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const objectUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+  const existingUrl = personaId && initialAvatar ? getPersonaAvatarUrl({ id: personaId, avatar: initialAvatar }) : null;
+  const previewUrl = objectUrl || existingUrl || null;
+
+  useEffect(() => {
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [objectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,25 +52,41 @@ export default function PersonaForm({
     setLoading(true);
 
     try {
-      const data: any = {
-        name: name.trim(),
-        description: description.trim(),
-        systemMessage: systemMessage.trim(),
-      };
+      const hasFile = selectedFile != null;
 
-      // COLLECTIONS.PERSONAS 사용
-      if (personaId) {
-        // 수정 시에는 author를 변경하지 않음 (생성자만 수정 가능하도록)
-        await pb.collection(COLLECTIONS.PERSONAS).update(personaId, data);
+      if (hasFile) {
+        const formData = new FormData();
+        formData.append('name', name.trim());
+        formData.append('description', description.trim());
+        formData.append('systemMessage', systemMessage.trim());
+        formData.append('avatar', selectedFile);
+
+        if (personaId) {
+          await pb.collection(COLLECTIONS.PERSONAS).update(personaId, formData);
+        } else {
+          formData.append('author', pb.authStore.model?.id || '');
+          await pb.collection(COLLECTIONS.PERSONAS).create(formData);
+        }
       } else {
-        // 생성 시에만 author 설정
-        data.author = pb.authStore.model?.id || '';
-        await pb.collection(COLLECTIONS.PERSONAS).create(data);
+        const data: Record<string, string> = {
+          name: name.trim(),
+          description: description.trim(),
+          systemMessage: systemMessage.trim(),
+        };
+
+        if (personaId) {
+          await pb.collection(COLLECTIONS.PERSONAS).update(personaId, data);
+        } else {
+          (data as any).author = pb.authStore.model?.id || '';
+          await pb.collection(COLLECTIONS.PERSONAS).create(data);
+        }
       }
 
       setName('');
       setDescription('');
       setSystemMessage('');
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       onSuccess();
     } catch (error: any) {
       console.error('Persona 저장 실패:', error);
@@ -88,6 +119,41 @@ export default function PersonaForm({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Persona에 대한 간단한 설명"
         />
+      </div>
+
+      <div className="form-group">
+        <label>이미지 (선택)</label>
+        <div className="persona-form-avatar">
+          {previewUrl && (
+            <div className="persona-form-avatar-preview">
+              <img src={previewUrl} alt="미리보기" />
+              <button
+                type="button"
+                className="persona-form-avatar-remove"
+                onClick={() => {
+                  setSelectedFile(null);
+                  if (fileInputRef.current) fileInputRef.current.value = '';
+                }}
+                aria-label="이미지 제거"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            id="avatar"
+            accept="image/*"
+            onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+            className="persona-form-avatar-input"
+          />
+          {!previewUrl && (
+            <label htmlFor="avatar" className="persona-form-avatar-label">
+              이미지 선택
+            </label>
+          )}
+        </div>
       </div>
 
       <div className="form-group">

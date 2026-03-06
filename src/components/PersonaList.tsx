@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import pb, { COLLECTIONS } from '../lib/pocketbase';
+import pb, { COLLECTIONS, getPersonaAvatarUrl } from '../lib/pocketbase';
 import type { Persona } from '../types';
 import PersonaForm from './PersonaForm';
 
@@ -14,6 +14,7 @@ function mapRecordToPersona(item: any): Persona {
     systemMessage: item.systemMessage,
     author: item.author,
     authorName: item.expand?.author?.name || item.expand?.author?.email || '알 수 없음',
+    avatar: item.avatar ?? undefined,
     created: item.created,
     updated: item.updated,
   };
@@ -152,6 +153,15 @@ export default function PersonaList() {
                   }
                 }}
               >
+                {persona.avatar && (
+                  <div className="persona-card-avatar">
+                    <img
+                      src={getPersonaAvatarUrl(persona) ?? ''}
+                      alt=""
+                      loading="lazy"
+                    />
+                  </div>
+                )}
                 <h3>{persona.name}</h3>
                 {persona.description && (
                   <p className="persona-description">{persona.description}</p>

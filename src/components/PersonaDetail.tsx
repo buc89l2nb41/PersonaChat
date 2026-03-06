@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import pb, { COLLECTIONS } from '../lib/pocketbase';
+import pb, { COLLECTIONS, getPersonaAvatarUrl } from '../lib/pocketbase';
 import type { Persona } from '../types';
 import Chat from './Chat';
 import PersonaForm from './PersonaForm';
@@ -36,6 +36,7 @@ export default function PersonaDetail() {
         systemMessage: record.systemMessage,
         author: record.author,
         authorName: record.expand?.author?.name || record.expand?.author?.email || '알 수 없음',
+        avatar: record.avatar ?? undefined,
         created: record.created,
         updated: record.updated,
       });
@@ -88,6 +89,7 @@ export default function PersonaDetail() {
             initialName={persona.name}
             initialDescription={persona.description || ''}
             initialSystemMessage={persona.systemMessage}
+            initialAvatar={persona.avatar ?? ''}
             onSuccess={handleEditSuccess}
           />
           <button 
@@ -100,6 +102,14 @@ export default function PersonaDetail() {
       ) : (
         <>
           <div className="persona-header">
+            {persona.avatar && (
+              <div className="persona-header-avatar">
+                <img
+                  src={getPersonaAvatarUrl(persona) ?? ''}
+                  alt=""
+                />
+              </div>
+            )}
             <div className="persona-header-top">
               <h2>{persona.name}</h2>
               {isAuthenticated && isAuthor && (
