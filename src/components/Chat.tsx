@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import pb, { COLLECTIONS } from '../lib/pocketbase';
+import { API_BASE_URL } from '../lib/api';
 
 type Role = 'system' | 'user' | 'assistant';
 
@@ -15,12 +16,6 @@ interface ChatProps {
   /** 로그인 시 이 페르소나와의 대화를 저장/불러오기할 때 사용 */
   personaId?: string;
 }
-
-// 로컬(DEV): VITE_API_URL 없으면 테스트 서버 주소 사용. 있으면 그대로 사용 (예: localhost:36000).
-// 프로덕션: VITE_API_URL 없으면 '' → 상대 경로(/health, /api) 사용, Vercel rewrites로 백엔드 프록시.
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? 'http://test-chat.atomic-dns.com:36000' : '');
 
 const FIRST_GREETING_PROMPT =
   '대화를 시작해줘. 너의 캐릭터에 맞는 첫 인사나 첫 멘트를 한 마디 해줘.';
